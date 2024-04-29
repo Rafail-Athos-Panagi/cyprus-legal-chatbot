@@ -26,7 +26,7 @@ export default function RootLayout({
           <SessionProviders>
             <ThProvider>
               <MainNavigation />
-              <NavigationApp children={children} />
+              <NavigationApp>{children}</NavigationApp>
               <Banner />
             </ThProvider>
           </SessionProviders>
