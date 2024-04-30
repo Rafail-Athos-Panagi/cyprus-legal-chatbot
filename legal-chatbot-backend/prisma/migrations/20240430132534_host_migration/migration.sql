@@ -29,9 +29,9 @@ CREATE TABLE `userChatHistory` (
     `updatedAt` DATETIME(3) NOT NULL,
     `chatNameKey` VARCHAR(191) NOT NULL,
     `chatStoreKey` VARCHAR(191) NOT NULL,
+    `title` VARCHAR(191) NOT NULL,
 
-    UNIQUE INDEX `userChatHistory_chatStoreKey_userId_key`(`chatStoreKey`, `userId`),
-    PRIMARY KEY (`chatStoreKey`)
+    UNIQUE INDEX `userChatHistory_chatStoreKey_key`(`chatStoreKey`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
