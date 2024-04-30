@@ -8,8 +8,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { SkipThrottle } from '@nestjs/throttler';
-import { GetCurrentUserId, Public } from 'src/common/decorators';
-import { AtGuard } from 'src/common/guards';
+import { GetCurrentUserId, Public } from '../common/decorators';
+import { AtGuard } from '../common/guards';
 import { ModelService } from './model.service';
 import { QueryDataDto } from './dto/query-data.dto';
 import { GetChatDto } from './dto/get-chat.dto';
