@@ -2,6 +2,8 @@
 
 A full-stack AI-powered legal assistant designed to help users interact with legal information in Cyprus through a modern web interface. The project combines a secure authentication backend, a polished Next.js frontend, and an AI model service for document-aware conversational responses.
 
+This project was developed in collaboration with the legal company Leginet, which also provided the data used to support the chatbot’s knowledge and functionality.
+
 ## Overview
 
 Cyprus Legal Chatbot is a multi-service application that enables users to:
