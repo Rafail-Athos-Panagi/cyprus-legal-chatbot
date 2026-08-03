@@ -149,19 +149,6 @@ If you deploy or run the project locally, ensure these values are configured sec
 - Connect the model service for AI responses and retrieval tasks
 - Keep authentication and user data handling consistent across services
 
-## Contributing
-
-Contributions are welcome. If you would like to improve the project:
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
-
-## License
-
-This project is currently unlicensed. If you plan to publish it publicly, consider adding an appropriate license file such as MIT or Apache 2.0.
-
 ## Contact
 
 For questions or collaboration, please reach out through the repository issues or the project maintainer.
