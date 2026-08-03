@@ -76,7 +76,8 @@ Make sure you have the following installed:
 
 - Node.js and npm
 - Python 3.10+
-- MySQL database
+- Docker Desktop (used to run the MySQL database — see below)
+- An **OpenAI API key** (required by both the backend and the model service)
 
 ### 1. Clone the repository
 
@@ -85,23 +86,58 @@ git clone <your-repository-url>
 cd cyprus-legal-chatbot
 ```
 
-### 2. Set up the backend
+### 2. Start the database with Docker
+
+The backend uses a MySQL database. The easiest way to run it locally is with Docker. Make sure **Docker Desktop is running**, then start a MySQL container:
+
+```bash
+docker run --name legal-chatbot-mysql \
+  -e MYSQL_ROOT_PASSWORD=rootpass \
+  -e MYSQL_DATABASE=NestJS_JWT \
+  -e MYSQL_USER=NestJS_JWT \
+  -e MYSQL_PASSWORD=NestJS_JWT \
+  -p 3306:3306 \
+  -d mysql:8
+```
+
+The container data persists between restarts. To stop and start it again later:
+
+```bash
+docker stop legal-chatbot-mysql
+docker start legal-chatbot-mysql
+```
+
+### 3. Set up the backend
 
 ```bash
 cd legal-chatbot-backend
 npm install
 ```
 
-Create a database and configure your environment variables in a `.env` file. At minimum, set values for:
+Configure your environment variables in a `.env` file. At minimum, set values for:
 
 ```env
-DATABASE_URL="mysql://user:password@localhost:3306/legal_chatbot"
+DATABASE_URL="mysql://NestJS_JWT:NestJS_JWT@localhost:3306/NestJS_JWT"
+AT_SECRET="your-access-token-secret"
+RT_SECRET="your-refresh-token-secret"
+
+# Email delivery (activation / password reset)
+EMAIL_HOST="your-smtp-host"
+EMAIL_USERNAME="your-smtp-username"
+EMAIL_PASSWORD="your-smtp-password"
+
+# Required: your own OpenAI API key
+OPENAI_API_KEY="sk-your-openai-api-key"
 ```
 
-Then run Prisma migrations:
+> **Note:** You must supply your own OpenAI API key. Get one from
+> https://platform.openai.com/api-keys. Never commit real keys to the repository.
+
+Generate the Prisma client and apply the migrations:
 
 ```bash
-npx prisma migrate dev
+npx prisma generate
+npx prisma migrate deploy
 ```
 
 Start the backend:
@@ -110,29 +146,55 @@ Start the backend:
 npm run start:dev
 ```
 
-### 3. Set up the frontend
+The backend runs on `http://localhost:3333`.
+
+### 4. Set up the frontend
 
 ```bash
 cd ../legal-chatbot-frontend
 npm install
+```
+
+Configure the frontend `.env` file:
+
+```env
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="your-nextauth-secret"
+OPENAI_API_KEY="sk-your-openai-api-key"
+```
+
+Then start it:
+
+```bash
 npm run dev
 ```
 
-The frontend will typically run on:
+The frontend runs on `http://localhost:3000`.
 
-```text
-http://localhost:3000
-```
-
-### 4. Set up the AI model service
+### 5. Set up the AI model service
 
 ```bash
 cd ../legal-chatbot-model
 pip install -r requirements.txt
+```
+
+The model service also needs your OpenAI API key. Set it as an environment variable (or in the service's `.env`, depending on your setup):
+
+```bash
+# Windows (PowerShell)
+$env:OPENAI_API_KEY="sk-your-openai-api-key"
+
+# macOS / Linux
+export OPENAI_API_KEY="sk-your-openai-api-key"
+```
+
+Then start the service:
+
+```bash
 python main.py
 ```
 
-The model service is expected to run on the port configured in the application flow.
+The model service runs on `http://localhost:3334`.
 
 ## Environment Notes
 
@@ -141,8 +203,14 @@ The backend relies on environment variables for:
 - database connection
 - JWT configuration
 - email delivery settings
+- an OpenAI API key (`OPENAI_API_KEY`)
 
-If you deploy or run the project locally, ensure these values are configured securely before starting the services.
+The frontend and the model service also require their own `OPENAI_API_KEY`.
+
+You must provide your own OpenAI API key — obtain one from
+https://platform.openai.com/api-keys. If you deploy or run the project locally,
+ensure these values are configured securely and never commit real keys or
+passwords to the repository.
 
 ## Development Workflow
 
